@@ -7,7 +7,7 @@ const gameboard = (() => {
 	// allows you to swap out an element at board index a for input b
 	const add = (a, b) => board[a] = b;
 	
-	// take the board back to the initialized state
+	// take the board back to the initialized state (empty)
 	const reset = () => { 
 		for(let i = 0; i < 9; i++) {
 			board[i] = ''
