@@ -13,11 +13,22 @@ const gameboard = (() => {
 			board[i] = ''
 		}
 	};
+
+	// call this after a winner is found to set the remaining blank divs to "-"
+	const finished = () => { 
+		for(let i = 0; i < 9; i++) {
+			if (board[i] == '') {
+				board[i] = '-'	
+			}
+			
+		}
+	};
 	
 	// public functions
 	return {
 	  board,
 	  add,
+	  finished,
 	  reset
 	};
 })();
@@ -39,18 +50,101 @@ const displayController = (() => {
 				 middle_left, middle_center, middle_right,
 				 bottom_left, bottom_center, bottom_right]
 
+	// boolean to know if the eventListeners have been added
+    let listening = false;
+
 	// add an eventListener to each div in the state array if it has no innerHTML; when clicked, add the n input to the gameboard and update the display. 
 	const listen = (n) => { 
+		/*listening = true;
 		for (i = 0; i < state.length; i++) {
 			if (state[i].innerHTML.length == 0) {
 				let tmp = i;
 				// the EventListener will only function once
-				state[i].addEventListener("click", function () {
+				state[tmp].addEventListener("click", function () {
 					gameboard.add(tmp, n);
 					update();
+					listening = false;
+					console.log(turn)
+					game.play();
 				}, {once:true})
 			}
-		}
+		}*/
+		document.addEventListener('click', function (event) {
+
+			if (event.target.matches('.top-left')) {
+				gameboard.add(0, n);
+				turn++;
+				update();
+				game.play();
+			} 
+
+			if (event.target.matches('.top-center')) {
+				gameboard.add(1, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.top-right')) {
+				gameboard.add(2, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.middle-left')) {
+				gameboard.add(3, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.middle-center')) {
+				gameboard.add(4, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.middle-right')) {
+				gameboard.add(5, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.bottom-left')) {
+				gameboard.add(6, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.bottom-center')) {
+				gameboard.add(7, n);
+				turn++;
+				update();
+				game.play();
+			}
+			if (event.target.matches('.top-right')) {
+				gameboard.add(8, n);
+				turn++;
+				update();
+				game.play();
+			}
+		}, {once:true});
+
+
+	};
+
+
+	
+
+
+
+
+
+
+	// holds the turn
+	let turn = 1;
+
+	// allow other modules to add to turn
+	const turnAdd = () => { 
+		turn++;
 	};
 
 	// update the DOM to reflect the board array
@@ -63,15 +157,41 @@ const displayController = (() => {
 	// public functions
 	return {
 	  update,
+	  listening,
 	  listen,
-	  state
+	  state,
+	  turn,
+	  turnAdd
 	};
 })();
 
-gameboard.reset();
-console.log(gameboard.board);
-console.log(gameboard.board);
-displayController.update();
-displayController.update();
-displayController.listen('O');
-displayController.listen('X');
+const game = (() => {
+	// take the board back to the initialized state
+	const checkWinner = () => { 
+		for (i = 0; i < 7; i+=3) {
+			if ((gameboard.board[i] != '') && gameboard.board[i] === gameboard.board[i+1] && gameboard.board[i] === gameboard.board[i+2]) {
+				console.log(gameboard[i]);
+				gameboard.finished();
+				return true;
+			}
+		}
+	};
+
+	const play = () => { 
+		if (displayController.turn % 2 == 0) {
+			displayController.listen('O');
+			displayController.turnAdd();
+		} else {
+			displayController.listen('X');
+			displayController.turnAdd();
+		}
+	};
+	
+	// public functions
+	return {
+	  checkWinner,
+	  play
+	};
+})();
+
+game.play();
