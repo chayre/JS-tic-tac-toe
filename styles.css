@@ -1,0 +1,44 @@
+.ticTacToe {
+
+    background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzAwIDMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPGxpbmUgc3R5bGU9InN0cm9rZTogcmdiKDAsIDAsIDApOyIgeDE9IjEwMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIzMDAiPjwvbGluZT4NCiAgPGxpbmUgc3R5bGU9InN0cm9rZTogcmdiKDAsIDAsIDApOyIgeDE9IjIwMCIgeTE9IjAiIHgyPSIyMDAiIHkyPSIzMDAiPjwvbGluZT4NCiAgPGxpbmUgc3R5bGU9InN0cm9rZTogcmdiKDAsIDAsIDApOyIgeDE9IjAiIHkxPSIxMDAiIHgyPSIzMDAiIHkyPSIxMDAiPjwvbGluZT4NCiAgPGxpbmUgc3R5bGU9InN0cm9rZTogcmdiKDAsIDAsIDApOyIgeDE9IjAiIHkxPSIyMDAiIHgyPSIzMDAiIHkyPSIyMDAiPjwvbGluZT4NCjwvc3ZnPg==");
+    background-size: cover;
+    aspect-ratio: 1/1;
+
+    /* These properties enable the draggable resize handle for "responsive" demonstration purposes: */
+    /*resize: horizontal;*/
+    overflow: hidden;
+    width: 300px;
+	margin: 0 auto;
+	margin-top: 6rem;
+	font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.grid3x3 {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    
+    aspect-ratio: 1 / 1;
+}
+
+.ticelement {
+	font-size: 3rem;
+	margin-left: 2.15rem;
+	margin-top: 1.45rem;
+
+}
+
+h1, h3 {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0 auto;
+	width: 300px;
+	text-align: center;
+	margin-bottom: 1rem; 
+	margin-top: 2rem;
+}
+
+
+html {
+  background-color: rgb(240, 233, 226);
+}
