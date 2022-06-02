@@ -14,7 +14,7 @@ const gameboard = (() => {
 	return {
 	  board,
 	  add,
-	  reset,
+	  reset
 	};
 })();
 
@@ -30,17 +30,28 @@ const displayController = (() => {
 	let bottom_left = document.getElementById('bottom-left');
 	let bottom_center = document.getElementById('bottom-center');
 	let bottom_right = document.getElementById('bottom-right');
-	
+
+	let state = [top_left, top_center, top_right,
+				 middle_left, middle_center, middle_right,
+				 bottom_left, bottom_center, bottom_right]
+
+	const listen = (n) => { 
+		for (i = 0; i < state.length; i++) {
+			if (state[i].innerHTML.length == 0) {
+				let tmp = i;
+				state[i].addEventListener("click", function () {
+					gameboard.add(tmp, n);
+					console.log(tmp)
+					displayController.update();
+				}, {once:true})
+			}
+		}
+	};
+
 	const update = () => { 
-		top_left.innerHTML = gameboard.board[0];
-		top_center.innerHTML = gameboard.board[1];
-		top_right.innerHTML = gameboard.board[2];
-		middle_left.innerHTML = gameboard.board[3];
-		middle_center.innerHTML = gameboard.board[4];
-		middle_right.innerHTML = gameboard.board[5];
-		bottom_left.innerHTML = gameboard.board[6];
-		bottom_center.innerHTML = gameboard.board[7];
-		bottom_right.innerHTML = gameboard.board[8];
+		for (i = 0; i < state.length; i++) {
+			state[i].innerHTML = gameboard.board[i];
+		}
 	};
 	
 	return {
@@ -54,30 +65,15 @@ const displayController = (() => {
 	  bottom_center,
 	  bottom_right,
 	  update,
-
+	  listen,
+	  state
 	};
 })();
 
-
 gameboard.reset();
 console.log(gameboard.board);
-gameboard.add(0, 'X');
-gameboard.add(1, 'X');
-gameboard.add(2, 'O');
-gameboard.add(3, 'X');
-gameboard.add(4, 'X');
-gameboard.add(5, 'O');
-gameboard.add(6, 'X');
-gameboard.add(7, 'X');
-gameboard.add(8, 'X');
 console.log(gameboard.board);
-/*console.log(displayController.top_left);
-console.log(displayController.top_center);
-console.log(displayController.top_right);
-console.log(displayController.middle_left);
-console.log(displayController.middle_center);
-console.log(displayController.middle_right);
-console.log(displayController.bottom_left);
-console.log(displayController.bottom_center);
-console.log(displayController.bottom_right);*/
 displayController.update();
+displayController.update();
+displayController.listen('O');
+displayController.listen('X');
