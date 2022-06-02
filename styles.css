@@ -24,8 +24,10 @@
 
 .ticelement {
 	font-size: 3rem;
-	margin-left: 2.15rem;
-	margin-top: 1.45rem;
+	
+	padding: 2.15rem;
+	padding-bottom: 1rem;
+	padding-top: 1.5rem;
 
 }
 
