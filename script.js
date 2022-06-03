@@ -49,6 +49,7 @@ const displayController = (() => {
 	let bottom_center = document.getElementById('bottom-center');
 	let bottom_right = document.getElementById('bottom-right');
 	let gameinfo = document.getElementById('gameinfo');
+	let resetbutton = document.getElementById('reset');
     let boxes = document.querySelectorAll('div.ticelement');
 
 	let updateInfo = (turn, marker) => {
@@ -59,13 +60,17 @@ const displayController = (() => {
 		gameinfo.innerHTML = "Well done " + marker +", you won on turn " + turn + "."
 	}
 
+	let draw = () => {
+		gameinfo.innerHTML = "It's a draw!"
+	}
+
 	// store div elements in state array
 	let state = [top_left, top_center, top_right,
 				 middle_left, middle_center, middle_right,
 				 bottom_left, bottom_center, bottom_right]
 
 	// add an eventListener to each div in the state array if it has no innerHTML; when clicked, add the n input to the gameboard and update the display. 
-	const listen = (n) => { 
+	const listen = () => { 
 		boxes.forEach((box) => {
 			box.addEventListener('click', () => {
 				marker = ''
@@ -79,8 +84,17 @@ const displayController = (() => {
 					}
 					update();
 					if(game.checkWinner()) {
+						gameboard.finished();
 						congratulate(turn, box.innerHTML);
-					} else {
+						turn = 1;
+					} else if (game.checkDraw()) {
+						gameboard.finished();
+						draw();
+						turn = 1;
+					} else if (game.reset) {
+						turn = 1;
+					}
+					else {
 						turn++;
 						updateInfo(turn, marker);
 					}
@@ -92,6 +106,11 @@ const displayController = (() => {
 	// holds the turn
 	let turn = 1;
 
+	// resets the turn
+	let resetTurn = (turn) => {
+		turn = 1;
+	}
+
 	// update the board array to reflect DOM
 	const update = () => { 
 		for (i = 0; i < state.length; i++) {
@@ -102,23 +121,33 @@ const displayController = (() => {
 	// public functions
 	return {
 	  update,
+	  updateInfo,
 	  listen,
 	  state,
 	  turn,
 	  boxes,
-	  updateInfo
+	  resetbutton,
+	  resetTurn
 	};
 })();
 
 const game = (() => {
-	// take the board back to the initialized state
+	//check if a draw condition has been met
+	const checkDraw = () => { 
+		if (gameboard.board.includes('')) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
+	// check if a win condition has been met
 	const checkWinner = () => { 
 		for (i = 0; i < 7; i+=3) {
 			if ((gameboard.board[i] != '' && gameboard.board[i] != '-') && gameboard.board[i] === gameboard.board[i+1] && gameboard.board[i] === gameboard.board[i+2]) {
 				displayController.boxes[i].classList.add("green");
 				displayController.boxes[i+1].classList.add("green");
 				displayController.boxes[i+2].classList.add("green");
-				gameboard.finished();
 				return true;
 			}
 		}
@@ -127,8 +156,6 @@ const game = (() => {
 				displayController.boxes[i].classList.add("green");
 				displayController.boxes[i+3].classList.add("green");
 				displayController.boxes[i+3].classList.add("green");
-				gameboard.finished();
-				displayController.update();
 				return true;
 			}
 		}
@@ -136,7 +163,6 @@ const game = (() => {
 			displayController.boxes[0].classList.add("green");
 			displayController.boxes[4].classList.add("green");
 			displayController.boxes[8].classList.add("green");
-			gameboard.finished();
 			return true;
 		}
 
@@ -144,33 +170,38 @@ const game = (() => {
 			console.log(gameboard.board[i]);
 			displayController.boxes[2].classList.add("green");
 			displayController.boxes[4].classList.add("green");
-			displayControllerboxes[6].classList.add("green");
-			displayController.finished();
+			displayController.boxes[6].classList.add("green");
 			return true;
 		}
 	};
 
-
+	let reset = false;
 
 	// move functions from listen to play
 
-	const play = () => { 
-		displayController.listen
-		if (displayController.turn % 2 == 0) {
-	
-			console.log(displayController.turn)
-			//displayController.turnAdd();
-		} else {
-			//displayController.turnAdd();
-			console.log(displayController.turn)
-		}
+	const play = () => { 	
+		displayController.listen();
+		console.log(gameboard.board.length)
+		displayController.resetbutton.addEventListener('click', () => {
+			gameboard.reset();
+			displayController.boxes.forEach((box) => {
+				box.innerHTML = ''
+				box.classList.remove("green");
+			});
+			reset = true;
+			displayController.resetTurn();
+			displayController.updateInfo(displayController.turn, "X");
+		});
+		reset = false;
 	};
 	
 	// public functions
 	return {
+	  checkDraw,
 	  checkWinner,
-	  play
+	  play,
+	  reset
 	};
 })();
 
-displayController.listen('X')
+game.play()
