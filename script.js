@@ -57,7 +57,7 @@ const displayController = (() => {
 	}
 
 	let congratulate = (turn, marker) => {
-		gameinfo.innerHTML = "Well done " + marker +", you won on turn " + turn + "."
+		gameinfo.innerHTML = "Well done, " + marker +". You won on turn " + turn + "."
 	}
 
 	let draw = () => {
@@ -107,7 +107,7 @@ const displayController = (() => {
 	let turn = 1;
 
 	// resets the turn
-	let resetTurn = (turn) => {
+	let resetTurn = () => {
 		turn = 1;
 	}
 
@@ -137,6 +137,7 @@ const game = (() => {
 		if (gameboard.board.includes('')) {
 			return false;
 		} else {
+			displayController.boxes.forEach(box => box.classList.add("red"));
 			return true;
 		}
 	};
@@ -187,12 +188,13 @@ const game = (() => {
 			displayController.boxes.forEach((box) => {
 				box.innerHTML = ''
 				box.classList.remove("green");
+				box.classList.remove("red");
 			});
-			reset = true;
+			//reset = true;
 			displayController.resetTurn();
 			displayController.updateInfo(displayController.turn, "X");
 		});
-		reset = false;
+		//reset = false;
 	};
 	
 	// public functions
