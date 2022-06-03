@@ -48,7 +48,12 @@ const displayController = (() => {
 	let bottom_left = document.getElementById('bottom-left');
 	let bottom_center = document.getElementById('bottom-center');
 	let bottom_right = document.getElementById('bottom-right');
+	let gameinfo = document.getElementById('gameinfo');
     let boxes = document.querySelectorAll('div.ticelement');
+
+	let updateInfo = (turn, marker) => {
+		gameinfo.innerHTML = "Turn " + turn +"; your turn, " + marker + "."
+	}
 
 	// store div elements in state array
 	let state = [top_left, top_center, top_right,
@@ -59,15 +64,21 @@ const displayController = (() => {
 	const listen = (n) => { 
 		boxes.forEach((box) => {
 			box.addEventListener('click', () => {
-				if (turn % 2 == 0 && box.innerHTML.length == 0) {
-					box.innerHTML = 'X';
-				} else if (turn % 2 == 1 && box.innerHTML.length == 0) {
-					box.innerHTML = 'O'
+				marker = ''
+				if (box.innerHTML.length == 0){
+					if (turn % 2 == 1) {
+						box.innerHTML = 'X';
+						marker = 'O'
+					} else {
+						box.innerHTML = 'O'
+						marker = 'X'
+					}
+					update();
+					console.log(gameboard.board)
+					game.checkWinner()
+					turn++;
+					updateInfo(turn, marker);
 				}
-				turn++;
-				update();
-				console.log(gameboard.board)
-				game.checkWinner();
 			});
 		  }, { once: true });
 	};
