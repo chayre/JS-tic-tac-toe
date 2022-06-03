@@ -3,9 +3,6 @@ const gameboard = (() => {
 	let board = ['','','',
 				   '','','',
 				   '','',''];
-
-	// allows you to swap out an element at board index a for input b
-	const add = (a, b) => board[a] = b;
 	
 	// take the board back to the initialized state (empty)
 	const reset = () => { 
@@ -31,7 +28,6 @@ const gameboard = (() => {
 	// public functions
 	return {
 	  board,
-	  add,
 	  finished,
 	  reset
 	};
@@ -39,37 +35,26 @@ const gameboard = (() => {
 
 const displayController = (() => {
 	// pull div elements from DOM
-	let top_left = document.getElementById('top-left');
-	let top_center = document.getElementById('top-center');
-	let top_right = document.getElementById('top-right');
-	let middle_left = document.getElementById('middle-left');
-	let middle_center = document.getElementById('middle-center');
-	let middle_right = document.getElementById('middle-right');
-	let bottom_left = document.getElementById('bottom-left');
-	let bottom_center = document.getElementById('bottom-center');
-	let bottom_right = document.getElementById('bottom-right');
 	let gameinfo = document.getElementById('gameinfo');
 	let resetbutton = document.getElementById('reset');
     let boxes = document.querySelectorAll('div.ticelement');
 
+	// update gameinfo innerHTML with the current turn and marker
 	let updateInfo = (turn, marker) => {
 		gameinfo.innerHTML = "Turn " + turn +"; your turn, " + marker + "."
 	}
 
+	// update gameinfo innerHTML with a congratulatory message, current turn and marker
 	let congratulate = (turn, marker) => {
 		gameinfo.innerHTML = "Well done, " + marker +". You won on turn " + turn + "."
 	}
 
+	// update gameinfo innerHTML to tell user it's a draw
 	let draw = () => {
 		gameinfo.innerHTML = "It's a draw!"
 	}
 
-	// store div elements in state array
-	let state = [top_left, top_center, top_right,
-				 middle_left, middle_center, middle_right,
-				 bottom_left, bottom_center, bottom_right]
-
-	// add an eventListener to each div in the state array if it has no innerHTML; when clicked, add the n input to the gameboard and update the display. 
+	// add an eventListener to each div in the boxes array if it has no innerHTML; when clicked, add a turn-dependent marker 
 	const listen = () => { 
 		boxes.forEach((box) => {
 			box.addEventListener('click', () => {
@@ -91,10 +76,7 @@ const displayController = (() => {
 						gameboard.finished();
 						draw();
 						turn = 1;
-					} else if (game.reset) {
-						turn = 1;
-					}
-					else {
+					} else {
 						turn++;
 						updateInfo(turn, marker);
 					}
@@ -102,32 +84,41 @@ const displayController = (() => {
 			});
 		  }, { once: true });
 	};
-		
-	// holds the turn
+	
+	// add a click event listener on button to reset innerHTML, reset classes, reset turncount, and update game info
+	const listenReset = () => {
+		resetbutton.addEventListener('click', () => {
+			gameboard.reset();
+			boxes.forEach((box) => {
+				box.innerHTML = ''
+				box.classList.remove("green");
+				box.classList.remove("red");
+			});
+			resetTurn();
+			updateInfo(turn, "X");
+		});
+	}
+
+	// current turn of the game
 	let turn = 1;
 
-	// resets the turn
+	// helper function to reset the turn
 	let resetTurn = () => {
 		turn = 1;
 	}
 
 	// update the board array to reflect DOM
 	const update = () => { 
-		for (i = 0; i < state.length; i++) {
-			gameboard.board[i] = state[i].innerHTML
+		for (i = 0; i < boxes.length; i++) {
+			gameboard.board[i] = boxes[i].innerHTML
 		}
 	};
 	
 	// public functions
 	return {
-	  update,
-	  updateInfo,
 	  listen,
-	  state,
-	  turn,
-	  boxes,
-	  resetbutton,
-	  resetTurn
+	  listenReset,
+	  boxes
 	};
 })();
 
@@ -156,7 +147,7 @@ const game = (() => {
 			if ((gameboard.board[i] != '' && gameboard.board[i] != '-') && gameboard.board[i] === gameboard.board[i+3] && gameboard.board[i] === gameboard.board[i+6]) {
 				displayController.boxes[i].classList.add("green");
 				displayController.boxes[i+3].classList.add("green");
-				displayController.boxes[i+3].classList.add("green");
+				displayController.boxes[i+6].classList.add("green");
 				return true;
 			}
 		}
@@ -176,25 +167,10 @@ const game = (() => {
 		}
 	};
 
-	let reset = false;
-
-	// move functions from listen to play
-
+	// add event listeners to buttons
 	const play = () => { 	
 		displayController.listen();
-		console.log(gameboard.board.length)
-		displayController.resetbutton.addEventListener('click', () => {
-			gameboard.reset();
-			displayController.boxes.forEach((box) => {
-				box.innerHTML = ''
-				box.classList.remove("green");
-				box.classList.remove("red");
-			});
-			//reset = true;
-			displayController.resetTurn();
-			displayController.updateInfo(displayController.turn, "X");
-		});
-		//reset = false;
+		displayController.listenReset();
 	};
 	
 	// public functions
@@ -202,7 +178,6 @@ const game = (() => {
 	  checkDraw,
 	  checkWinner,
 	  play,
-	  reset
 	};
 })();
 
