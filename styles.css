@@ -44,3 +44,7 @@ h1, h3 {
 html {
   background-color: rgb(240, 233, 226);
 }
+
+.green {
+	color: green;
+}

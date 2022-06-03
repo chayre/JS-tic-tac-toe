@@ -108,15 +108,42 @@ const game = (() => {
 	const checkWinner = () => { 
 		for (i = 0; i < 7; i+=3) {
 			if ((gameboard.board[i] != '') && gameboard.board[i] === gameboard.board[i+1] && gameboard.board[i] === gameboard.board[i+2]) {
-				console.log(gameboard[i]);
+				console.log(displayController.boxes[i]);
+				displayController.boxes[i].classList.add("green");
+				displayController.boxes[i+1].classList.add("green");
+				displayController.boxes[i+2].classList.add("green");
 				gameboard.finished();
 				return true;
 			}
-
-
-			// Add more win conditions here. add function to change color of winning row
-
 		}
+		for (i = 0; i < 3; i++) {
+			if ((gameboard.board[i] != '') && gameboard.board[i] === gameboard.board[i+3] && gameboard.board[i] === gameboard.board[i+6]) {
+				console.log(gameboard.board[i]);
+				gameboard.boxes[i].classList.add("green");
+				gameboard.boxes[i+3].classList.add("green");
+				gameboard.boxes[i+3].classList.add("green");
+				gameboard.finished();
+				return true;
+			}
+		}
+		if ((gameboard.board[0] != '') && gameboard.board[0] === gameboard.board[4] && gameboard.board[0] === gameboard.board[8]) {
+			console.log(gameboard.board[i]);
+			gameboard.boxes[0].classList.add("green");
+			gameboard.boxes[4].classList.add("green");
+			gameboard.boxes[8].classList.add("green");
+			gameboard.finished();
+			return true;
+		}
+
+		if ((gameboard.board[0] != '') && gameboard.board[0] === gameboard.board[4] && gameboard.board[0] === gameboard.board[8]) {
+			console.log(gameboard.board[i]);
+			gameboard.boxes[2].classList.add("green");
+			gameboard.boxes[4].classList.add("green");
+			gameboard.boxes[6].classList.add("green");
+			gameboard.finished();
+			return true;
+		}
+		
 	};
 
 
